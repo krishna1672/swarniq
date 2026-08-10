@@ -5,6 +5,7 @@ import { Media } from "@/components/ui/Media";
 import { Price } from "@/components/ui/Price";
 import { Icon } from "@/components/ui/Icon";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { worldMeta } from "@/data/catalog";
 
 const inr = new Intl.NumberFormat("en-IN", {
@@ -73,15 +74,9 @@ export function ProductDetail({
               {product.longDescription}
             </p>
 
-            {/* Actions (UI only) */}
+            {/* Actions */}
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                className="inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-cta bg-gold px-7 text-sm font-semibold uppercase tracking-wide text-ivory transition-colors hover:bg-gold-dark"
-              >
-                <Icon name="cart" size={18} />
-                Add to Cart
-              </button>
+              <AddToCartButton product={product} />
               <button
                 type="button"
                 aria-label="Add to wishlist"

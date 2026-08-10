@@ -8,6 +8,7 @@ import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 import { MegaMenu } from "./MegaMenu";
 import { SearchOverlay } from "./SearchOverlay";
+import { useCart } from "@/components/cart/CartProvider";
 import { cn } from "@/lib/cn";
 
 /**
@@ -19,6 +20,7 @@ export function Header() {
   const [open, setOpen] = useState(false); // mobile drawer
   const [active, setActive] = useState<string | null>(null); // desktop mega menu
   const [searchOpen, setSearchOpen] = useState(false);
+  const { count, openCart } = useCart();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const openMenu = (label: string) => {
@@ -99,8 +101,17 @@ export function Header() {
           <button aria-label="Wishlist" className="hover:text-gold">
             <Icon name="wishlist" size={20} />
           </button>
-          <button aria-label="Cart" className="hover:text-gold">
+          <button
+            aria-label={`Cart${count > 0 ? ` (${count})` : ""}`}
+            onClick={openCart}
+            className="relative hover:text-gold"
+          >
             <Icon name="cart" size={20} />
+            {count > 0 && (
+              <span className="absolute -right-2 -top-2 grid h-4 min-w-4 place-items-center rounded-full bg-gold px-1 text-[10px] font-semibold leading-none text-ivory">
+                {count}
+              </span>
+            )}
           </button>
         </div>
       </Container>
