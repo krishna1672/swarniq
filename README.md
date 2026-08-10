@@ -26,7 +26,7 @@ source of truth. Colours were sampled from the comps:
 | `gold` | `#AF6200` | CTAs, script accent, links (exact design value) |
 | `cocoa` | `#583100` | hero display heading (exact design value) |
 | `chartreuse` | `#D5E24A` | announcement bar |
-| `ink` / `ink-muted` / `ink-soft` | `#2B2118` … | section headings / body / meta |
+| `ink` / `ink-muted` / `ink-soft` | `#141414` … | section headings / body / meta (exact design value) |
 | `tint-*` | peach, rose, lilac, sand, mint | card backgrounds |
 | `bg-why-gradient` | yellow → pink | "Why Svarniq" band |
 
