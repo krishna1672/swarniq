@@ -7,7 +7,7 @@ import { Price } from "./Price";
 export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="flex h-full flex-col">
-      <Link href={product.href} className="group flex flex-1 flex-col">
+      <Link href={`/products/${product.slug}`} className="group flex flex-1 flex-col">
         <Media
           src={product.image}
           alt={product.imageAlt}

@@ -6,6 +6,25 @@ export type NavItem = {
   children?: { label: string; href: string }[];
 };
 
+/** Rich nav dropdown ("mega menu") shown on hover for a nav item. */
+export type MenuCard = {
+  title: string;
+  subtitle?: string;
+  image: string;
+  href: string;
+};
+
+export type MenuColumn = {
+  title: string;
+  links: { label: string; href: string }[];
+};
+
+export type MegaMenu = {
+  columns?: MenuColumn[]; // text link columns
+  cards?: MenuCard[]; // image thumbnail cards
+  cta?: { label: string; href: string };
+};
+
 export type HeroSlide = {
   id: string;
   headline: string; // serif line(s)
@@ -46,15 +65,31 @@ export type FeatureItem = {
   subtitle: string;
 };
 
+export type JewelleryWorld = "indian" | "western";
+
 export type Product = {
   id: string;
+  slug: string;
   name: string;
-  description: string; // "Necklace + Earrings"
+  description: string; // short subtitle, e.g. "Necklace + Earrings"
+  world: JewelleryWorld;
+  subcategory: string; // slug, e.g. "gold-combo-sets"
+  subcategoryLabel: string; // "Gold Combo Sets"
   price: number; // in ₹
+  originalPrice?: number; // for strike-through
   savingLabel?: string; // "Save 10%"
   image: string;
   imageAlt: string;
-  href: string;
+  details: string[]; // PDP spec bullets
+  longDescription: string; // PDP paragraph
+  bestseller?: boolean;
+  isNew?: boolean;
+};
+
+/** Metadata for a listing (collection / category) page. */
+export type CollectionMeta = {
+  title: string;
+  description: string;
 };
 
 export type Testimonial = {

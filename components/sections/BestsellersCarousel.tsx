@@ -1,10 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { bestsellers } from "@/data/products";
+import { bestsellers } from "@/data/catalog";
 import { Container } from "@/components/ui/Container";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { Icon } from "@/components/ui/Icon";
+
+// Homepage row shows a curated five; the full set lives on /bestsellers.
+const featured = bestsellers.slice(0, 5);
 
 /** "Our Bestsellers" — 5 product cards, scroll-snap below xl. */
 export function BestsellersCarousel() {
@@ -29,7 +32,7 @@ export function BestsellersCarousel() {
             ref={trackRef}
             className="snap-x-track grid auto-cols-[70%] grid-flow-col gap-6 overflow-x-auto pb-2 sm:auto-cols-[40%] lg:auto-cols-[22%] xl:grid-flow-row xl:auto-cols-auto xl:grid-cols-5 xl:overflow-visible"
           >
-            {bestsellers.map((p) => (
+            {featured.map((p) => (
               <div key={p.id} className="snap-item">
                 <ProductCard product={p} />
               </div>

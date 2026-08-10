@@ -61,9 +61,9 @@ const config: Config = {
         chartreuse: "#D5E24A",
         // Text
         ink: {
-          DEFAULT: "#2B2118", // headings — warm near-black
-          muted: "#6B6156", // body / captions
-          soft: "#948B80", // meta (city, "save 10%")
+          DEFAULT: "#141414", // primary dark text + section headings (exact design value)
+          muted: "#5C5750", // body / captions
+          soft: "#8A857D", // meta (city, "save 10%")
         },
         // Category / testimonial card tints
         tint: {

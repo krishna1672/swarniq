@@ -1,23 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { mainNav } from "@/data/navigation";
+import { mainNav, megaMenus } from "@/data/navigation";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
+import { MegaMenu } from "./MegaMenu";
+import { SearchOverlay } from "./SearchOverlay";
 import { cn } from "@/lib/cn";
 
 /**
- * Site header. Full horizontal nav from `lg`; below that it collapses to a
- * hamburger + slide-down drawer (mobile behavior is authored here since the
- * Figma file has no mobile comp).
+ * Site header. From `lg`, hovering Collections / Indian / Western opens a
+ * full-width mega-menu panel (category thumbnails + links). Below `lg` it
+ * collapses to a hamburger + slide-down drawer.
  */
 export function Header() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // mobile drawer
+  const [active, setActive] = useState<string | null>(null); // desktop mega menu
+  const [searchOpen, setSearchOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openMenu = (label: string) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setActive(megaMenus[label] ? label : null);
+  };
+  const scheduleClose = () => {
+    closeTimer.current = setTimeout(() => setActive(null), 120);
+  };
+  const cancelClose = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+  };
+
+  const activeMenu = active ? megaMenus[active] : null;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-ivory/90 backdrop-blur">
+    <header
+      className="sticky top-0 z-40 border-b border-line bg-ivory/95 backdrop-blur"
+      onMouseLeave={scheduleClose}
+    >
       <Container className="flex items-center justify-between py-4">
         {/* Mobile: menu toggle */}
         <button
@@ -35,37 +56,41 @@ export function Header() {
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-8 lg:flex">
-          {mainNav.map((item) => (
-            <div key={item.label} className="group relative">
+          {mainNav.map((item) => {
+            const hasMenu = !!megaMenus[item.label];
+            return (
               <Link
+                key={item.label}
                 href={item.href}
-                className="flex items-center gap-1 font-sans text-xs font-semibold uppercase tracking-eyebrow text-ink transition-colors hover:text-gold"
+                onMouseEnter={() => openMenu(item.label)}
+                className={cn(
+                  "flex items-center gap-1 font-sans text-xs font-semibold uppercase tracking-eyebrow transition-colors hover:text-gold",
+                  active === item.label ? "text-gold" : "text-ink",
+                )}
               >
                 {item.label}
-                {item.children && item.children.length > 0 && (
-                  <Icon name="chevron-down" size={14} />
+                {hasMenu && (
+                  <Icon
+                    name="chevron-down"
+                    size={14}
+                    className={cn(
+                      "transition-transform duration-200",
+                      active === item.label && "rotate-180",
+                    )}
+                  />
                 )}
               </Link>
-              {item.children && item.children.length > 0 && (
-                <div className="invisible absolute left-0 top-full z-50 min-w-56 translate-y-1 rounded-card border border-line bg-ivory p-2 opacity-0 shadow-card transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                  {item.children.map((child) => (
-                    <Link
-                      key={child.label}
-                      href={child.href}
-                      className="block rounded px-3 py-2 text-sm text-ink-muted transition-colors hover:bg-cream-100 hover:text-ink"
-                    >
-                      {child.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </nav>
 
         {/* Utility icons */}
-        <div className="flex items-center gap-4 text-ink">
-          <button aria-label="Search" className="hover:text-gold">
+        <div className="flex items-center gap-4 text-ink" onMouseEnter={() => setActive(null)}>
+          <button
+            aria-label="Search"
+            className="hover:text-gold"
+            onClick={() => setSearchOpen(true)}
+          >
             <Icon name="search" size={20} />
           </button>
           <button aria-label="Account" className="hidden hover:text-gold sm:block">
@@ -79,6 +104,17 @@ export function Header() {
           </button>
         </div>
       </Container>
+
+      {/* Desktop mega-menu panel */}
+      {activeMenu && (
+        <div
+          className="absolute inset-x-0 top-full hidden border-t border-line bg-ivory shadow-card lg:block"
+          onMouseEnter={cancelClose}
+          onMouseLeave={scheduleClose}
+        >
+          <MegaMenu menu={activeMenu} onNavigate={() => setActive(null)} />
+        </div>
+      )}
 
       {/* Mobile drawer */}
       <div
@@ -115,6 +151,8 @@ export function Header() {
           ))}
         </Container>
       </div>
+
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }
