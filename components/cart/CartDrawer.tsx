@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "./CartProvider";
+import { bestsellers } from "@/data/catalog";
 import { Media } from "@/components/ui/Media";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
@@ -15,7 +16,13 @@ const inr = new Intl.NumberFormat("en-IN", {
 
 /** Slide-in cart drawer. */
 export function CartDrawer() {
-  const { items, isOpen, closeCart, removeItem, setQty, subtotal, count } = useCart();
+  const { items, isOpen, closeCart, removeItem, setQty, addItem, subtotal, count } =
+    useCart();
+
+  // Recommend bestsellers not already in the cart.
+  const suggestions = bestsellers
+    .filter((b) => !items.some((i) => i.id === b.id))
+    .slice(0, 2);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -143,6 +150,41 @@ export function CartDrawer() {
               ))}
             </ul>
 
+            {/* Upsell */}
+            {suggestions.length > 0 && (
+              <div className="border-t border-line px-6 py-4">
+                <p className="eyebrow">You might also like</p>
+                <ul className="mt-3 space-y-3">
+                  {suggestions.map((p) => (
+                    <li key={p.id} className="flex items-center gap-3">
+                      <Link href={`/products/${p.slug}`} onClick={closeCart}>
+                        <Media
+                          src={p.image}
+                          alt={p.imageAlt}
+                          tint="bg-cream-100"
+                          rounded="rounded-lg"
+                          className="h-12 w-12 shrink-0"
+                          sizes="48px"
+                        />
+                      </Link>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-serif text-sm text-ink">{p.name}</p>
+                        <p className="text-xs text-ink-soft">{inr.format(p.price)}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => addItem(p)}
+                        aria-label={`Add ${p.name} to cart`}
+                        className="grid h-8 w-8 place-items-center rounded-full border border-line text-ink transition-colors hover:border-gold hover:text-gold"
+                      >
+                        +
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* Footer */}
             <div className="border-t border-line px-6 py-5">
               <div className="flex items-center justify-between">
@@ -154,12 +196,13 @@ export function CartDrawer() {
               <p className="mt-1 text-xs text-ink-soft">
                 Shipping &amp; taxes calculated at checkout.
               </p>
-              <button
-                type="button"
+              <Link
+                href="/checkout"
+                onClick={closeCart}
                 className="mt-4 flex h-14 w-full items-center justify-center rounded-cta bg-gold text-sm font-semibold uppercase tracking-wide text-ivory transition-colors hover:bg-gold-dark"
               >
                 Checkout
-              </button>
+              </Link>
               <button
                 onClick={closeCart}
                 className="mt-3 w-full text-center text-xs uppercase tracking-eyebrow text-ink-soft transition-colors hover:text-gold"

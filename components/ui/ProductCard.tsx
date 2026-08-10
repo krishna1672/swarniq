@@ -2,11 +2,13 @@ import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { Media } from "./Media";
 import { Price } from "./Price";
+import { WishlistButton } from "@/components/wishlist/WishlistButton";
 
-/** Bestsellers product card: image, name, description, price + saving. */
+/** Product card: image (with wishlist heart), name, description, price + saving. */
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <article className="flex h-full flex-col">
+    <article className="relative flex h-full flex-col">
+      <WishlistButton product={product} variant="card" />
       <Link href={`/products/${product.slug}`} className="group flex flex-1 flex-col">
         <Media
           src={product.image}

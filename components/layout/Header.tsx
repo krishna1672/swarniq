@@ -9,6 +9,7 @@ import { Logo } from "@/components/ui/Logo";
 import { MegaMenu } from "./MegaMenu";
 import { SearchOverlay } from "./SearchOverlay";
 import { useCart } from "@/components/cart/CartProvider";
+import { useWishlist } from "@/components/wishlist/WishlistProvider";
 import { cn } from "@/lib/cn";
 
 /**
@@ -21,6 +22,7 @@ export function Header() {
   const [active, setActive] = useState<string | null>(null); // desktop mega menu
   const [searchOpen, setSearchOpen] = useState(false);
   const { count, openCart } = useCart();
+  const { count: wishCount } = useWishlist();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const openMenu = (label: string) => {
@@ -98,9 +100,18 @@ export function Header() {
           <button aria-label="Account" className="hidden hover:text-gold sm:block">
             <Icon name="user" size={20} />
           </button>
-          <button aria-label="Wishlist" className="hover:text-gold">
+          <Link
+            href="/wishlist"
+            aria-label={`Wishlist${wishCount > 0 ? ` (${wishCount})` : ""}`}
+            className="relative hover:text-gold"
+          >
             <Icon name="wishlist" size={20} />
-          </button>
+            {wishCount > 0 && (
+              <span className="absolute -right-2 -top-2 grid h-4 min-w-4 place-items-center rounded-full bg-gold px-1 text-[10px] font-semibold leading-none text-ivory">
+                {wishCount}
+              </span>
+            )}
+          </Link>
           <button
             aria-label={`Cart${count > 0 ? ` (${count})` : ""}`}
             onClick={openCart}

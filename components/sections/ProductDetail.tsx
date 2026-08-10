@@ -6,6 +6,7 @@ import { Price } from "@/components/ui/Price";
 import { Icon } from "@/components/ui/Icon";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
+import { WishlistButton } from "@/components/wishlist/WishlistButton";
 import { worldMeta } from "@/data/catalog";
 
 const inr = new Intl.NumberFormat("en-IN", {
@@ -77,14 +78,7 @@ export function ProductDetail({
             {/* Actions */}
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <AddToCartButton product={product} />
-              <button
-                type="button"
-                aria-label="Add to wishlist"
-                className="inline-flex h-14 items-center justify-center gap-2 rounded-cta border border-line px-7 text-sm font-semibold uppercase tracking-wide text-ink transition-colors hover:border-gold hover:text-gold"
-              >
-                <Icon name="wishlist" size={18} />
-                <span className="sm:hidden">Wishlist</span>
-              </button>
+              <WishlistButton product={product} variant="pdp" />
             </div>
 
             {/* Details */}
